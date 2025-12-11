@@ -11,7 +11,16 @@ A simple web tool that lets you paste code and get:
 - Support for multiple snippets (`---` separator)
 
 Supports **Python & JavaScript**.
+---
 
+## Screenshots
+<img width="2560" alt="Highlighting UI" src="https://github.com/user-attachments/assets/40a0318e-de20-4043-8b90-df20fad86b31" />
+<br><br>
+<img width="2552" alt="Home UI" src="https://github.com/user-attachments/assets/2aa9b12c-2452-494c-b8af-c5c7de7cccb8" />
+<br><br>
+<img width="2552" alt="Diff View UI" src="https://github.com/user-attachments/assets/cd26001c-9bc4-447d-b63b-ec000330bb13" />
+
+---
 ## Features
 - Explain code in plain English  
 - Highlight functions, loops, conditions, variables, etc.  
