@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analysis Results</title>
+
+    <style>
+        body { font-family: Arial; margin: 20px; }
+
+        pre { 
+            background: #f4f4f4; 
+            padding: 10px; 
+            border-radius: 5px; 
+            overflow-x: auto;
+        }
+
+        /* Semantic highlight colors */
+        func { color:#0066ff; font-weight:bold; }
+        loop { background:rgba(0,255,0,0.15); }
+        cond { background:rgba(255,215,0,0.3); }
+        ret { color:#ff3333; font-weight:bold; }
+        var { color:#b266ff; }
+        call { color:#009933; font-weight:bold; }
+        comment { color:#777; font-style:italic; }
+
+        /* Collapsible header */
+        .collapse-header {
+            background: #eee;
+            padding: 12px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* Collapsible content */
+        .collapse-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 0 0 6px 6px;
+            border-top: none;
+            margin-bottom: 20px;
+        }
+
+        .snippet-box { padding-bottom: 10px; }
+        .diff-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .diff-column {
+            width: 50%;
+        }
+
+        .diff-column pre {
+            margin: 0;
+            padding: 0;
+        }
+
+        .diff-line {
+            margin: 0;
+            padding: 3px 6px;   /* MUCH smaller */
+            line-height: 1.1;  /* tighter rows */
+            white-space: pre;
+        }
+
+        .diff-line.same  { background: #fff; }
+        .diff-line.remove { background: #ffe5e5; }
+        .diff-line.add { background: #e7ffe7; }
+        .diff-line.empty { background: #fff; }
+
+
+    </style>
+
+    <script>
+    function toggleCollapse(id) {
+        let section = document.getElementById(id);
+        section.style.display = section.style.display === "block" ? "none" : "block";
+    }
+    </script>
+</head>
+<body>
+<a href="/">⬅ Back</a>
+
+<h1>AI Code Analysis Result</h1>
+
+{% if error %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+{% if results %}
+    {% for r in results %}
+
+    <div class="snippet-box">
+
+        <!-- Collapsible Header -->
+        <div class="collapse-header" onclick="toggleCollapse('snippet{{ forloop.counter }}')">
+            ▶ Snippet {{ forloop.counter }}
+        </div>
+
+        <!-- Collapsible Body -->
+        <div id="snippet{{ forloop.counter }}" class="collapse-content">
+
+            <h3>Detected Language</h3>
+            <p>{{ r.detected|upper }}</p>
+
+            <h3>Explanation</h3>
+            <p>{{ r.explanation }}</p>
+
+            <h3>Semantic Highlighting</h3>
+            <pre>{{ r.highlighted|safe }}</pre>
+            <h3>AST Summary ({{ r.detected|upper }})</h3>
+            <pre>{{ r.ast }}</pre>
+            <h3>Key Points</h3>
+            <ul>
+                {% for k in r.key_points %}
+                <li>{{ k }}</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Complexity</h3>
+            <p>{{ r.complexity }}</p>
+
+            <h3>Optimized Code</h3>
+            <pre>{{ r.optimized }}</pre>
+
+            <h3>Diff</h3>
+            <div class="diff-container">
+
+                <div class="diff-column">
+                    <h4>Original</h4>
+                    <pre>
+            {% spaceless %}
+            {% for d in r.left_diff %}
+            <div class="diff-line {{ d.type }}">{{ d.line }}</div>
+            {% endfor %}
+            {% endspaceless %}
+                    </pre>
+                </div>
+
+                <div class="diff-column">
+                    <h4>Optimized</h4>
+                    <pre>
+            {% spaceless %}
+            {% for d in r.right_diff %}
+            <div class="diff-line {{ d.type }}">{{ d.line }}</div>
+            {% endfor %}
+            {% endspaceless %}
+                    </pre>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>
